@@ -1,30 +1,55 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net"
 
-	pb "github.com/dinhlq03/examples-grpc/protos/user"
+	pb "github.com/dinhlq03/examples-grpc/protos"
 
-	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type server struct {
-	request []*pb.GetRequest
+	pb.UnimplementedInventoryServer
 }
 
-func (s *server) CreateUser(ctx context.Context, req *pb.CreateRequest) (*pb.CreateResponse, error) {
-	return &pb.CreateResponse{}, nil
+func (s *server) GetBookList(ctx context.Context, in *pb.GetBookListRequest) (*pb.GetBookListResponse, error) {
+	log.Printf("Received request: %v", in.ProtoReflect().Descriptor().FullName())
+	return &pb.GetBookListResponse{
+		Books: getSampleBooks(),
+	}, nil
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":8080")
+	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		panic(err)
 	}
 
-	srv := grpc.NewServer()
-	pb.RegisterUserServer(srv, &server{})
-	srv.Serve(lis)
+	log.Printf("Start server at port: 8080")
+
+	s := grpc.NewServer()
+	reflection.Register(s)
+	pb.RegisterInventoryServer(s, &server{})
+	if err := s.Serve(listener); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
+
+func getSampleBooks() []*pb.Book {
+	sampleBooks := []*pb.Book{
+		{
+			Title:     "The Hitchhiker's Guide to the Galaxy",
+			Author:    "Douglas Adams",
+			PageCount: 42,
+		},
+		{
+			Title:     "The Lord of the Rings",
+			Author:    "J.R.R. Tolkien",
+			PageCount: 1234,
+		},
+	}
+	return sampleBooks
 }
