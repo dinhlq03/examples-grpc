@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.4
-// source: protos/bookshop.proto
+// source: bookshop.proto
 
-package pb
+package user_service
 
 import (
 	context "context"
@@ -35,7 +35,7 @@ func NewInventoryClient(cc grpc.ClientConnInterface) InventoryClient {
 
 func (c *inventoryClient) GetBookList(ctx context.Context, in *GetBookListRequest, opts ...grpc.CallOption) (*GetBookListResponse, error) {
 	out := new(GetBookListResponse)
-	err := c.cc.Invoke(ctx, "/Inventory/GetBookList", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/user_service.Inventory/GetBookList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func _Inventory_GetBookList_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Inventory/GetBookList",
+		FullMethod: "/user_service.Inventory/GetBookList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(InventoryServer).GetBookList(ctx, req.(*GetBookListRequest))
@@ -92,7 +92,7 @@ func _Inventory_GetBookList_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Inventory_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Inventory",
+	ServiceName: "user_service.Inventory",
 	HandlerType: (*InventoryServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -101,5 +101,5 @@ var Inventory_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "protos/bookshop.proto",
+	Metadata: "bookshop.proto",
 }

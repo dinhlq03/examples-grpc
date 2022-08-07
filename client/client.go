@@ -1,33 +1,26 @@
 package main
 
 import (
+	"context"
 	"log"
-	"net"
 
 	pb "github.com/dinhlq03/examples-grpc/protos"
-	"golang.org/x/net/context"
+
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
-type server struct {
-	request []*pb.UserServer
-}
-
-func (s *server) CreateUser(ctx context.Context, req *pb.CreateRequest) (*pb.CreateResponse, error) {
-	return &pb.CreateResponse{}, nil
-}
-
 func main() {
-	conn, err := grpc.Dial("user:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("failed to connect: %v", err)
 	}
 	defer conn.Close()
 
-	client := pb.NewUserClient(conn)
-    request := &pb.CreateRequest{
-		User: {}
+	client := pb.NewInventoryClient(conn)
+	bookList, err := client.GetBookList(context.Background(), &pb.GetBookListRequest{})
+	if err != nil {
+		log.Fatalf("failed to get book list: %v", err)
 	}
-	_, err := client.CreateUser(context.Background(), request)
-    // To do something with resp from instance server response
+	log.Printf("book list: %v", bookList)
 }

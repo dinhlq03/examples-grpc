@@ -1,6 +1,10 @@
 syntax = "proto3";
 
-option go_package = "bookshop/pb";
+// option go_package = "github.com/dinhlq03/examples-grpc/protos/bookshop";
+// package books;
+package user_service;
+
+option go_package = "./;user_service";
 
 message Book {
   string title = 1;
