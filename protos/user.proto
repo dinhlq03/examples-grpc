@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/dinhlq03/examples/grpc";
+option go_package = "github.com/dinhlq03/examples-grpc";
 package user;
 // Khởi tạo đối tượng User
 

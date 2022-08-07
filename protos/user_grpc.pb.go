@@ -4,7 +4,7 @@
 // - protoc             v3.21.4
 // source: user.proto
 
-package grpc
+package examples_grpc
 
 import (
 	context "context"
