@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/dinhlq03/examples-grpc/protos"
+	pb "github.com/dinhlq03/examples-grpc/server/protos"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
