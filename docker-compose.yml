@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+    # proxy:
+    #     image: jwilder/nginx-proxy:alpine
+    #     container_name: nginx-proxy
+    #     networks:
+    #       front-end:
+    #     volumes:
+    #       - /var/run/docker.sock:/tmp/docker.sock:ro
+    #     ports:
+    #       - "88"
+    server:
+        build:
+          context: ./server
+          dockerfile: Dockerfile
+        container_name: server
+        # networks:
+        #   back-end:
+        ports:
+          - "9090:9090"
+    envoy:
+        build:
+          context: .
+          dockerfile: DockerfileEnvoy
+        ports:
+          - "8080:8080"
+        links:
+          - server
+    client:
+        build:
+          context: ./client/myreact
+          dockerfile: Dockerfile
+        container_name: client
+        # networks:
+        #   front-end:
+        #   back-end:
+        # depends_on:
+        #   - proxy
+        ports:
+          - "3000:3000"
+    
+
+# networks:
+#   front-end:
+#   back-end:

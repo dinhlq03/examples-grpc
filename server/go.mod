@@ -1,4 +1,4 @@
-module github.com/dinhlq03/examples-grpc
+module golang/my-go
 
 go 1.17
 

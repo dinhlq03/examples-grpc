@@ -1,24 +1,18 @@
-FROM golang:1.8.3-alpine
+# FROM golang:1.6
+FROM golang:1.14.4 AS build
 
-WORKDIR /go/src/github.com/dinhlq03/examples/examples-grpc/server
 
-# Add the source code
-ENV SRC_DIR=/github.com/dinhlq03/examples/examples-grpc/server/
+# Move to working directory /app
+WORKDIR /app
 
-ENV BUILD_PACKAGES="git curl"
 
-ADD . $SRC_DIR
+# Copy the code into the container
+COPY . .
 
-RUN apk update && apk add --no-cache $BUILD_PACKAGES \
-  && curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh \
-  && dep ensure \
-  && apk del $BUILD_PACKAGES
 
-# Copy environment variable to source dir
-# COPY .env $SRC_DIR.env
+# Build the application's binary
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main .
 
-RUN cd $SRC_DIR; CGO_ENABLED=0 GOOS=linux go build -ldflags '-w -s' -a -o main
 
-EXPOSE 8080
-
-ENTRYPOINT ["./server"]
+# Command to run the application when starting the container
+CMD ["/app/main"]

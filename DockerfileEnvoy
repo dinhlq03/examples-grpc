@@ -1,0 +1,8 @@
+# FROM envoyproxy/envoy-dev:a866dceb91d0ae0d2f1b45f116463bd33d1a9310
+# COPY envoy.yaml /etc/envoy/envoy.yaml
+# RUN chmod 777 /etc/envoy/envoy.yaml
+
+FROM envoyproxy/envoy-dev:a866dceb91d0ae0d2f1b45f116463bd33d1a9310
+COPY envoy.yaml /etc/envoy/envoy.yaml
+CMD /usr/local/bin/envoy -c /etc/envoy/envoy.yaml
+EXPOSE 8080
